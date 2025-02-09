@@ -1,7 +1,7 @@
 'use strict';
 
 import { convertCsvToJson, successResponse, updateKeyName } from "../../utility/index.js";
-import { addBulkQuestion, createQuestion, listOfQuestionsForCategory } from "./schema.js";
+import { addBulkQuestion, createQuestion } from "./schema.js";
 import fs from "fs";
 import path from "path";
 const __dirname = path.resolve();
@@ -37,19 +37,6 @@ export const bulkUploadQuestionAnswer = async(req, res, next) => {
         });
         // await addBulkQuestion(la_formatedData.final_update_arr);
         successResponse(res, "Question Added Successfully");
-    } catch (e) {
-        console.log("e", e);
-        next(e);
-    }
-}
-export const getAllQuestionsForCategory = async(req, res, next) => {
-    try {
-        const la_questionList = await listOfQuestionsForCategory(req.query);
-        let ls_messsage = "No Question Found";
-        if (la_questionList.length > 0) {
-            ls_messsage = "Question Listing";
-        }
-        successResponse(res, ls_messsage, la_questionList);
     } catch (e) {
         console.log("e", e);
         next(e);
