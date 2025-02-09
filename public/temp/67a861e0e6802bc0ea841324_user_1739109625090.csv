@@ -1,0 +1,4 @@
+Question*,Category ('|' pipe seperated)*,Answers ('|' pipe seperated)*,Valid Answer*
+What is hydra,javascript|node,yes|no|bug|null,bug
+what is new age,javascript,yahh|not|issue|none,issue
+what is process in node,node,module|no|bug|none,module

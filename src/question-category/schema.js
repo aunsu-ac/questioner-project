@@ -18,6 +18,7 @@ const questionCategorySchema = new mongoose.Schema({
         },
         unique: true,
         trim: true,
+        index: true,
     },
     question_count: {
         type: Number,
@@ -28,6 +29,7 @@ const questionCategorySchema = new mongoose.Schema({
     timestamps: true,
     collection: 'question_category',
 });
+questionCategorySchema.index({ category_name: 1 }, { unique: true });
 
 const QuestionCategoryModel = mongoose.model('QuestionCategory', questionCategorySchema);
 
@@ -88,3 +90,38 @@ export const updateCategoryCount = async(category_ids) => {
         },
     });
 };
+export const getCategoryIdsByNames = async(la_categoryNames) => {
+    const la_category = await QuestionCategoryModel.find({
+        category_name: { $in: la_categoryNames }
+    }, { _id: 1 });
+    const la_categoryIds = la_category.map(category => category._id);
+    return la_categoryIds;
+}
+
+export const categoryWiseQuestionList = async() => {
+
+    const la_questionList = await QuestionCategoryModel.aggregate([{
+            $lookup: {
+                from: 'question',
+                localField: "_id",
+                foreignField: "category_ids",
+                as: "question_list"
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                category_name: 1,
+                question_count: 1,
+                question_count_by_size: { $size: "$question_list" },
+                question_list: {
+                    _id: 1,
+                    question_title: 1,
+                    answers: 1
+                }
+            }
+
+        }
+    ]);
+    return la_questionList;
+}
