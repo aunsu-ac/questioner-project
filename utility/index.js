@@ -195,8 +195,6 @@ export const sendEmail = async(lo_data, layout = "template") => {
         context: tempContext,
     };
 
-    console.log(mailOptions, 'mailOptions');
-
     const result = await smtpTransport.sendMail(mailOptions);
     return result;
 };
