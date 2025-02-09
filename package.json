@@ -1,0 +1,28 @@
+{
+    "name": "questioner-project",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Aunsu Chandra",
+    "license": "ISC",
+    "dependencies": {
+        "compression": "^1.7.4",
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "express-fileupload": "^1.4.0",
+        "express-validator": "^7.0.1",
+        "fs": "^0.0.1-security",
+        "jsonwebtoken": "^9.0.0",
+        "moment": "^2.29.4",
+        "mongodb": "^5.3.0",
+        "mongoose": "^7.1.0",
+        "path": "^0.12.7",
+        "require": "^0.4.4"
+    }
+}
