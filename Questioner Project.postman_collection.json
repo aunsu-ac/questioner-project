@@ -1,0 +1,464 @@
+{
+	"info": {
+		"_postman_id": "8fc0a6be-c95f-46f9-a566-6557243bc6bb",
+		"name": "Questioner Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22782977"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"aunsu.ac@gmail.com\",\n    \"name\": \"Aunsu Chandra\",\n    \"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}user/register",
+					"host": [
+						"{{base_url}}user"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resend Email Verification OTP",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"aunsu.ac@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}user/resend-otp",
+					"host": [
+						"{{base_url}}user"
+					],
+					"path": [
+						"resend-otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Email",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"aunsu@idiosystech.com\",\n    \"otp\": \"5297\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}user/verify-otp",
+					"host": [
+						"{{base_url}}user"
+					],
+					"path": [
+						"verify-otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Email Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"// console.log(data.responseData.token, 'aunsu');",
+							"if(data.data){",
+							"    postman.setEnvironmentVariable(\"token\", data.data.token);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"aunsu@idiosystech.com\",\n    \"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}user/login",
+					"host": [
+						"{{base_url}}user"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "My Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}common/my-profile",
+					"host": [
+						"{{base_url}}common"
+					],
+					"path": [
+						"my-profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Category with Count",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}question-category",
+					"host": [
+						"{{base_url}}question-category"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List of questions for each category with count",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}question-category/get-category-wise-question",
+					"host": [
+						"{{base_url}}question-category"
+					],
+					"path": [
+						"get-category-wise-question"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "submit answer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"question_id\": \"67a8c5d927a72a277a471867\",\n    \"given_answer\": \"MongoDB\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}submission-history",
+					"host": [
+						"{{base_url}}submission-history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search and get all Submition list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}submission-history?text=ongo",
+					"host": [
+						"{{base_url}}submission-history"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "ongo"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Category",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"category_name\": \"React.js\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}question-category",
+					"host": [
+						"{{base_url}}question-category"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Question Bulk Add",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "csv_path",
+							"value": "67a8bdd88ea61b09e7b7217a_user_1739113831065.csv",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}question/bulk-upload",
+					"host": [
+						"{{base_url}}question"
+					],
+					"path": [
+						"bulk-upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Temp File Upload",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file_data",
+							"type": "file",
+							"src": "/home/aunsu/Documents/question_by_category_demo_data1.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}common/temp-file-upload",
+					"host": [
+						"{{base_url}}common"
+					],
+					"path": [
+						"temp-file-upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Aunsu Hydra\",\n    \"profile_image\": \"67a8bdd88ea61b09e7b7217a_user_1739112440026.png\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}common/update-profile",
+					"host": [
+						"{{base_url}}common"
+					],
+					"path": [
+						"update-profile"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
