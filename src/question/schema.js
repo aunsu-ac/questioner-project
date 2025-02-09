@@ -16,6 +16,7 @@ const questionSchema = new mongoose.Schema({
             },
             message: "Question Title must be unique",
         },
+        index: true,
     },
     category_ids: {
         type: [{
@@ -60,9 +61,11 @@ const questionSchema = new mongoose.Schema({
     }
 }, {
     versionKey: false,
-    timestamps: false,
+    timestamps: true,
     collection: 'question',
 });
+
+questionSchema.index({ question_title: 1 }, { unique: true });
 
 const QuestionModel = mongoose.model('Question', questionSchema);
 
@@ -139,4 +142,8 @@ export const listOfQuestionsForCategory = async(lo_queryParams) => {
 }
 export const getQuestionById = async(id) => {
     return await QuestionModel.findById(id);
+}
+export const addBulkQuestion = async(la_questionData) => {
+    const la_question = await QuestionModel.insertMany(la_questionData);
+    return la_question;
 }

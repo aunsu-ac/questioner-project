@@ -2,6 +2,11 @@ import jwt from 'jsonwebtoken';
 import crypto from "crypto";
 import hbs from "nodemailer-express-handlebars";
 import nodemailer from "nodemailer";
+import csv from "csv-parser";
+import fs from "fs";
+import path from "path";
+import { getCategoryIdsByNames } from '../src/question-category/schema.js';
+const __dirname = path.resolve();
 
 const password_salt = "kYse3A1@";
 const jwt_expiry = '120d';
@@ -205,3 +210,47 @@ export const getDynamicContentFromTemplate = (emailTemplateString, mailData) => 
     }
     return str;
 };
+export const convertCsvToJson = async(ls_filePath = "") => {
+    const la_dataArray = [];
+    await new Promise((resolve, reject) => {
+        fs.createReadStream(ls_filePath).pipe(csv())
+            .on("data", (row) => la_dataArray.push(row))
+            .on("end", () => resolve(la_dataArray))
+            .on("error", (err) => reject(err));
+    });
+    return la_dataArray;
+}
+export const updateKeyName = async(la_rawData) => {
+    const la_requiredCSVKeys = ["Question*", "Category ('|' pipe seperated)*", "Answers ('|' pipe seperated)*", "Valid Answer*"];
+    const la_fileErrors = [];
+    const la_updatedData = [];
+
+    for (let index = 0; index < la_rawData.length; index++) {
+        const item = la_rawData[index];
+        const la_missingFields = la_requiredCSVKeys.filter(field => !item[field]);
+
+        if (la_missingFields.length > 0) {
+            la_fileErrors.push(`At row ${index + 2} ${la_missingFields.join(', ')} is required`.replaceAll('*', ''));
+            continue;
+        }
+
+        const la_categoryNames = item[la_requiredCSVKeys[1]].split('|');
+        const la_answers = item[la_requiredCSVKeys[2]].split('|');
+        const la_categoryIds = await getCategoryIdsByNames(la_categoryNames);
+
+        if (la_categoryNames.length === la_categoryIds.length && la_categoryIds.length > 0) {
+            la_updatedData.push({
+                question_title: item["Question*"],
+                category_ids: la_categoryIds,
+                answers: la_answers.map((answer) => answer.trim()),
+                valid_answer: item["Valid Answer*"],
+            });
+        } else {
+            la_fileErrors.push(`At row ${index + 2}, one or multiple categories are not recognized within our system.`);
+        }
+    }
+    return {
+        final_update_arr: la_updatedData,
+        file_errors: la_fileErrors
+    };
+}

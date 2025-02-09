@@ -1,12 +1,38 @@
 'use strict';
 
-import { successResponse } from "../../utility/index.js";
-import { createQuestion } from "./schema.js";
+import { convertCsvToJson, successResponse ,updateKeyName} from "../../utility/index.js";
+import { addBulkQuestion, createQuestion } from "./schema.js";
+import fs from "fs";
+import path from "path";
+const __dirname = path.resolve();
 
 export const addQuestion = async(req, res, next) => {
     try {
         const lo_question = await createQuestion(req.body);
         successResponse(res, "Question Added Successfully", lo_question);
+    } catch (e) {
+        console.log("e", e);
+        next(e);
+    }
+}
+export const bulkUploadQuestionAnswer = async(req, res, next) => {
+    try {
+        const ls_filePath = req.body?.csv_path || '';
+        if (ls_filePath == '') {
+            throw new Error('Please provide file path');
+        }
+        const ls_fullPath = path.join(__dirname, `public/temp/${ls_filePath}`);
+        if (!fs.existsSync(ls_fullPath)) {
+            throw new Error('File does not exist');
+        }
+
+        const la_rawData = await convertCsvToJson(ls_fullPath);
+        const la_formatedData = await updateKeyName(la_rawData);
+        if(la_formatedData.file_errors.length > 0){
+            throw new Error(la_formatedData.file_errors.join('\n'));
+        }
+        await addBulkQuestion(la_formatedData.final_update_arr);
+        successResponse(res, "Question Added Successfully");
     } catch (e) {
         console.log("e", e);
         next(e);
