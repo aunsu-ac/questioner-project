@@ -5,13 +5,13 @@ import { getAllCategory, createCategory } from "./schema.js";
 
 export const getAllCategoryListWithCount = async(req, res, next) => {
     try {
-        const la_vendor = await getAllCategory(req.query);
+        const la_categoryList = await getAllCategory(req.query);
         let ls_messsage = "No Category Found";
-        if (la_vendor.category_list.length > 0) {
+        if (la_categoryList.category_list.length > 0) {
             ls_messsage = "Category Listing";
         }
 
-        successResponse(res, ls_messsage, la_vendor);
+        successResponse(res, ls_messsage, la_categoryList);
     } catch (e) {
         console.log("e", e);
         next(e);

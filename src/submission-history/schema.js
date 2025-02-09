@@ -87,64 +87,32 @@ export const saveAnswer = async(lo_submittionData, lo_user) => {
     return lo_question;
 }
 
-export const listOfQuestionsForCategory = async(lo_queryParams) => {
-    let { category_id = '', text = '', page = 1, limit = 10 } = lo_queryParams;
+export const getAllSubmitedAnswers = async(lo_queryParams) => {
+    let { text = '', page = 1, limit = 10 } = lo_queryParams;
 
     text = text.trim() || "";
     limit = Math.min(parseInt(limit), 50);
     let skip = (parseInt(page) - 1) * limit;
 
-    let lo_sort = {
-        createdAt: -1,
-    };
-
     let lo_filterData = {};
-
-    if (category_id != "") {
-        lo_filterData = {
-            ...lo_filterData,
-            category_ids: new mongoose.Types.ObjectId(category_id)
-        };
-    }
 
     if (text != "") {
         lo_filterData = {
             ...lo_filterData,
-            question_title: { $regex: `${text}`, $options: "i" }
+            $or: [
+                { given_answer: { $regex: `${text}`, $options: "i" } },
+                { "question_data.question_title": { $regex: `${text}`, $options: "i" } },
+                { "user_data.name": { $regex: `${text}`, $options: "i" } }
+            ]
         };
     }
-    const li_totalRecords = await QuestionModel.countDocuments(lo_filterData)
+
+    const li_totalRecords = await getAllSubmitedAnswersData(lo_filterData, [], true)
     let li_totalPages = Math.ceil(li_totalRecords / limit);
+    const la_submissionList = await getAllSubmitedAnswersData(lo_filterData, [{ $skip: skip }, { $limit: limit }], false)
 
-    const la_questionList = await QuestionModel.aggregate([
-        { $match: lo_filterData },
-        {
-            $lookup: {
-                from: 'question',
-                localField: "_id",
-                foreignField: "category_ids",
-                as: "question_list"
-            }
-        }, { $sort: lo_sort },
-        {
-            $project: {
-                _id: 1,
-                category_name: 1,
-                question_count: 1,
-                question_count_by_size: { $size: "$question_list" },
-                question_list: {
-                    _id: 1,
-                    question_title: 1,
-                    answers: 1,
-                    valid_answer: 1
-                }
-            }
-
-        },
-        { $skip: skip }, { $limit: limit }
-    ]);
     return {
-        question_list: la_questionList,
+        submited_answer_list: la_submissionList,
         pagination: {
             total_pages: li_totalPages,
             total_records: li_totalRecords,
@@ -152,4 +120,48 @@ export const listOfQuestionsForCategory = async(lo_queryParams) => {
             limit: limit
         }
     }
+}
+
+const getAllSubmitedAnswersData = async(lo_filterData, la_paginaionData, lb_count = true) => {
+    const la_submissionList = await SubmissionHistoryModel.aggregate([{
+        $sort: {
+            submission_date: -1
+        }
+    }, {
+        $lookup: {
+            from: "question",
+            localField: "question_id",
+            foreignField: "_id",
+            as: "question_data"
+        }
+    }, {
+        $unwind: {
+            path: "$question_data",
+        }
+    }, {
+        $lookup: {
+            from: "user",
+            localField: "user_id",
+            foreignField: "_id",
+            as: "user_data"
+        }
+    }, {
+        $unwind: {
+            path: "$user_data",
+        }
+    }, { $match: lo_filterData }, {
+        $project: {
+            _id: 1,
+            question_title: "$question_data.question_title",
+            user_name: "$user_data.name",
+            given_answer: 1,
+            submission_date: 1
+        }
+    }, ...la_paginaionData]);
+
+    if (lb_count) {
+        return la_submissionList.length
+    }
+    return la_submissionList;
+
 }
