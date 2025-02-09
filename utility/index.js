@@ -1,5 +1,8 @@
 import jwt from 'jsonwebtoken';
 import crypto from "crypto";
+import hbs from "nodemailer-express-handlebars";
+import nodemailer from "nodemailer";
+
 const password_salt = "kYse3A1@";
 const jwt_expiry = '120d';
 export const otp_expiry = 120;
@@ -99,7 +102,7 @@ export const verifyJwtToken = (token) => {
     return jwt.verify(token, password_salt);
 }
 
-export const generateOtpNew = async(ls_attemptCount, ls_otpFor = "") => {
+export const generateOtpNew = async(ls_attemptCount) => {
     const li_attemptCount = parseInt(ls_attemptCount);
     const li_newAttemptCount = li_attemptCount + 1;
     let li_otp = genarateRandomeNumber(1111, 9999);
@@ -133,4 +136,72 @@ export const generateOtpNew = async(ls_attemptCount, ls_otpFor = "") => {
     }
 
     return lo_otp;
+};
+
+const getSmtpTransport = () => {
+    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD } = process.env;
+
+    const transporter = nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        secure: false,
+        auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASSWORD,
+        },
+    });
+    return transporter;
+};
+
+export const sendEmail = async(lo_data, layout = "template") => {
+    const options = {
+        viewEngine: {
+            extname: ".hbs",
+            layoutsDir: "views/email/",
+            defaultLayout: layout,
+        },
+        viewPath: "views/email/",
+        extName: ".hbs",
+    };
+
+    const smtpTransport = getSmtpTransport();
+    smtpTransport.use("compile", hbs(options));
+
+    const lo_templateDetails = {
+        template_subject: "Your Email Vrification OTP is [otp]",
+        template_body: "Dear [user_name], Your Email Verification OTP is [otp]"
+    };
+
+    const ls_dynamicEmailSubject = getDynamicContentFromTemplate(lo_templateDetails.template_subject, lo_data);
+    const ls_dynamicEmailBody = getDynamicContentFromTemplate(lo_templateDetails.template_body, lo_data);
+    const tempContext = {};
+    tempContext.email_body = ls_dynamicEmailBody;
+
+    const ls_senderEmail = `<${process.env.EMAIL_FORM_EMAIL}>`;
+    const ls_senderName = `${process.env.EMAIL_FORM_NAME}`;
+
+    let ls_emailFrom = `${ls_senderName} ${ls_senderEmail}`;
+
+    const mailOptions = {
+        template: layout,
+        from: ls_emailFrom,
+        to: lo_data.email,
+        subject: ls_dynamicEmailSubject,
+        context: tempContext,
+    };
+
+    console.log(mailOptions, 'mailOptions');
+
+    const result = await smtpTransport.sendMail(mailOptions);
+    return result;
+};
+
+export const getDynamicContentFromTemplate = (emailTemplateString, mailData) => {
+    var str = emailTemplateString.toString();
+    var userData = JSON.parse(JSON.stringify(mailData));
+    for (let key in userData) {
+        const placeholder = "[" + key + "]";
+        str = str.split(placeholder).join(userData[key]);
+    }
+    return str;
 };

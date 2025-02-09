@@ -1,7 +1,7 @@
 'use strict'
 import mongoose from 'mongoose'
 const { Schema } = mongoose
-import { generateJwt, encrypt, generateOtpNew, max_otp_attempt_count,otp_resend, decrypt} from '../../utility/index.js'
+import { generateJwt, encrypt, generateOtpNew, max_otp_attempt_count,otp_resend, decrypt, sendEmail} from '../../utility/index.js'
 import { saveAuthToken } from '../auth_tokens/schema.js'
 import moment from 'moment';
 import fs from 'fs';
@@ -125,7 +125,11 @@ export const addNewUser = async form => {
     let lo_savedUser = await lo_user.save();
 	
 	if (lo_savedUser) {
-		// send mail
+		sendEmail({
+			user_name: lo_savedUser.name,
+			otp: lo_emailOtp.value,
+			email: lo_savedUser.email
+		})
 		lo_savedUser = lo_savedUser.toObject();
 		delete lo_savedUser.password;
 		delete lo_savedUser.email_verify_otp;
@@ -171,7 +175,11 @@ export const resendOTPForExistingUser = async form => {
     let lo_savedUser = await lo_existingUser.save();
 	
 	if (lo_savedUser) {
-		// send mail
+		sendEmail({
+			user_name: lo_savedUser.name,
+			otp: lo_emailOtp.value,
+			email: lo_savedUser.email
+		})
 		lo_savedUser = lo_savedUser.toObject();
 		delete lo_savedUser.password;
 		delete lo_savedUser.email_verify_otp;
