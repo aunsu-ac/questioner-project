@@ -1,4 +1,26 @@
 Question*,Category ('|' pipe seperated)*,Answers ('|' pipe seperated)*,Valid Answer*
-What is hydra,javascript|node,yes|no|bug|null,bug
-what is new age,javascript,yahh|not|issue|none,issue
-what is process in node,node,module|no|bug|none,module
+What is Node.js?,node,A runtime environment|A programming language|A database|An operating system,A runtime environment
+Which module is used for handling file operations in Node.js?,node,fs|http|events|express,fs
+Which command is used to initialize a new Node.js project?,node,npm init|npm start|npm run|node init,npm init
+Which built-in module is used for handling HTTP requests in Node.js?,node,http|fs|url|net,http
+Which object is used to handle events in Node.js?,node,EventEmitter|EventHandler|Emitter|Listener,EventEmitter
+Which of the following is a non-blocking method in Node.js?,node,readFileSync|writeFileSync|readFile|execSync,readFile
+Which package manager is used with Node.js?,node,npm|pip|yarn|maven,npm
+What is JavaScript?,javascript,A scripting language|A database|A server-side language|An operating system,A scripting language
+Which keyword is used to declare a constant in JavaScript?,javascript,var|let|const|static,const
+Which function is used to parse JSON in JavaScript?,javascript,JSON.parse()|JSON.stringify()|JSON.decode()|parseJSON(),JSON.parse()
+Which method is used to convert a JavaScript object into a JSON string?,javascript,JSON.stringify()|JSON.parse()|toJSON()|stringify(),JSON.stringify()
+Which of the following is not a JavaScript framework?,javascript,React|Vue|Django|Angular,Django
+What does '===' operator do in JavaScript?,javascript,Checks value only|Checks type only|Checks both value and type|Performs assignment,Checks both value and type
+Which data type is not primitive in JavaScript?,javascript,String|Number|Boolean|Object,Object
+Which of these is a NoSQL database?,MongoDB,MySQL|PostgreSQL|MongoDB|Oracle,MongoDB
+Which query is used to find all documents in a MongoDB collection?,MongoDB,db.collection.find()|db.collection.search()|db.collection.getAll()|db.collection.lookup(),db.collection.find()
+Which command is used to insert a document in MongoDB?,MongoDB,db.collection.insertOne()|db.collection.add()|db.collection.push()|db.collection.create(),db.collection.insertOne()
+Which command is used to update a document in MongoDB?,MongoDB,db.collection.updateOne()|db.collection.modify()|db.collection.edit()|db.collection.alter(),db.collection.updateOne()
+Which field is automatically created as a primary key in MongoDB?,MongoDB,_id|primary_id|document_id|unique_id,_id
+What type of database is MongoDB?,MongoDB,Relational|Document-based|Graph-based|Columnar,Document-based
+What is an event loop?,node|javascript,A loop in JavaScript|A mechanism in Node.js to handle async operations|A MongoDB query method|An infinite loop,A mechanism in Node.js to handle async operations
+What is JSON?,node|javascript|MongoDB,A programming language|A data format|A database|An API,A data format
+Which method is used to handle asynchronous operations in JavaScript?,node|javascript,setTimeout()|await|Promise|All of the above,All of the above
+How do you connect Node.js to MongoDB?,node|MongoDB,Using MySQL|Using mongoose|Using express|Using fetch,Using mongoose
+Which command is used to install dependencies in a Node.js project?,node|javascript,npm install|yarn add|pip install|composer require,npm install

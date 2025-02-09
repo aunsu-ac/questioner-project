@@ -1,0 +1,49 @@
+[{
+  "_id": {
+    "$oid": "67a8807921237b176b6f0816"
+  },
+  "category_name": "javascript",
+  "question_count": 13,
+  "createdAt": {
+    "$date": "2025-02-09T10:16:25.056Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-09T15:12:27.682Z"
+  }
+},{
+  "_id": {
+    "$oid": "67a881e0b6c134105508c125"
+  },
+  "category_name": "node",
+  "question_count": 12,
+  "createdAt": {
+    "$date": "2025-02-09T10:16:25.056Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-09T15:12:27.682Z"
+  }
+},{
+  "_id": {
+    "$oid": "67a8c107f8d774ee5c221503"
+  },
+  "category_name": "MongoDB",
+  "question_count": 8,
+  "createdAt": {
+    "$date": "2025-02-09T14:51:51.923Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-09T15:12:27.682Z"
+  }
+},{
+  "_id": {
+    "$oid": "67a8c1a427a72a277a47183b"
+  },
+  "category_name": "React.js",
+  "question_count": 0,
+  "createdAt": {
+    "$date": "2025-02-09T14:54:29.008Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-09T14:54:29.008Z"
+  }
+}]
